@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>滚动条</title>
+<style>
+	#box{ border:2px solid #ccc; padding:5px; width:500px; height:300px; background:#fbfafa; margin:0 auto; position:relative; overflow: hidden;}
+	#slideBar{ width:17px; height:300px; background:#f1f1f1; position: absolute; right:2px;}
+	#bar{ width:13px; height:80px; margin:0 2px; background:#c1c1c1; border-radius:10px; cursor: pointer; position: absolute;}
+	#bar:hover{ background:#a8a8a8 }
+	#content{ width:478px; float:left; position: absolute;}
+</style>
+<script>
+	window.onload = function(){
+		var slideBar = document.getElementById('slideBar');
+		var bar = document.getElementById('bar');
+		var box = document.getElementById('box');
+		var content = document.getElementById('content');
+		//初始化滚动条高度
+		if( getPos(content).height < box.clientHeight ){
+			bar.style.display = 'none';
+			return;
+		}
+		var maxH = box.clientHeight / getPos(content).height;
+		bar.style.height = maxH * getPos(slideBar).height + 'px';
+		
+		var maxY = slideBar.clientHeight - bar.offsetHeight;
+		var innerY = box.clientHeight - getPos(content).height;
+		var scale;
+		var y = 0;
+		
+		
+		//鼠标滚轮
+		mScroll( box,function(){
+			//向上
+			y -= 10;
+			if( y < 0 ){
+				y = 0;
+			}
+			scale = y / maxY;
+			bar.style.top = y + 'px';
+			content.style.top = scale * innerY + 'px';
+		},function(){
+			//向下
+			y += 10;
+			if( y > maxY ){
+				y = maxY;
+			}
+			scale = y / maxY;
+			bar.style.top = y + 'px';
+			content.style.top = scale * innerY + 'px';
+		});
+		
+		//点击滚轮
+		bar.onmousedown = function(ev){
+			var disy = ev.clientY - getPos(this).top;
+			
+			document.onmousemove = function(ev){
+				y = ev.clientY - disy;
+
+				//限制范围Y轴
+				if( y < 0 ){
+					y = 0;
+				}
+				if( y > maxY ){
+					y = maxY;
+				}
+				//算出比例值
+				scale = y / maxY;
+				bar.style.top = y + 'px';
+				content.style.top = scale * innerY + 'px';
+			};
+			
+			document.onmouseup = function(){
+				document.onmousemove = null;
+			};
+			
+			return false;
+		};
+		
+		
+		//封装矩形
+		function getPos(obj){
+			return obj.getBoundingClientRect();
+		}
+		//鼠标滚动封装
+		function mScroll(obj,upper,down){
+			obj.addEventListener('DOMMouseScroll', fn, false);
+			obj.onmousewheel  = fn;
+
+			function fn(ev){
+				var n;
+				/*
+					负数代表向下
+					正数是向上
+					n就是这个数字
+				*/
+				if(ev.detail){
+					//firefox
+					n = -ev.detail;
+				}else{
+					//ie和chrome
+					n = ev.wheelDelta;
+				}
+				//n小于0向下滚动，否则向上。
+				if(n<0){
+					down();
+				}else{
+					upper();
+				}
+				
+				ev.preventDefault();
+			}
+		}
+		
+	};
+</script>
+</head>
+<body style="height:2000px">
+	<div id="box">
+		<div id="content">
+			妙味课堂是北京妙味趣学信息技术有限公司旗下的IT前端培训品牌，
+妙味课堂是一支独具特色的IT培训团队，妙味反对传统IT教育枯燥乏味的教学模式，妙味提供一种全新的快乐学习方法！
+目前主要针对的是javascript培训，同时还提供了css教程、javascript视频、js特效等，最新推出了外地学员们喜欢的javascript网络课程服务，同时还为处于javascript入门阶段的朋友录制了大量javascript视频，其中涉及了大量javascript基础知识，希望妙味课堂推出的javascript网络培训课程能带给大家更多惊喜。妙味课堂是北京妙味趣学信息技术有限公司旗下的IT前端培训品牌，
+妙味课堂是一支独具特色的IT培训团队，妙味反对传统IT教育枯燥乏味的教学模式，妙味提供一种全新的快乐学习方法！
+目前主要针对的是javascript培训，同时还提供了css教程、javascript视频、js特效等，最新推出了外地学员们喜欢的javascript网络课程服务，同时还为处于javascript入门阶段的朋友录制了大量java的IT培训团队，妙味反对传统IT教育枯燥乏味的教学模式，妙味提供一种全新的快乐学习方法！
+目前主要针对的是javascript培训，同时还提供了css教程、javascript视频、js特效等，最新推出了外地学员们喜欢的javascript网络课程服务，同时还为处于javascript入门阶段的朋友录制了大量javascript视频，其中涉及了大量javascript基础知识，希望妙味课堂推出的javascript网络培训课程能带给大家更多惊喜。妙味课堂是北京妙味趣学信息技术有限公司旗下的IT前端培训品牌，
+妙味课堂是一支独具特色的IT培训团队，妙味反对传统IT教育枯燥乏味的教学模式，妙味提供一种全新的快乐学习方法！
+目前主要针对的是javascript培训，同时还提供了css教程、javascript视频、js特效等，最新推出了外地学员们喜欢的javascript网络课程服务，同时还为处于javascript入门阶段的朋友录制了大量java的IT培训团队，妙味反对传统IT教育枯燥乏味的教学模式，妙味提供一种全新的快乐学习方法！
+目前主要针对的是javascript培训，同时还提供了css教程、javascript视频、js特效等，最新推出了外地学员们喜欢的javascript网络课程服务，同时还为处于javascript入门阶段的朋友录制了大量javascript视频，其中涉及了大量javascript基础知识，希望妙味课堂推出的javascript网络培训课程能带给大家更多惊喜。妙味课堂是北京妙味趣学信息技术有限公司旗下的IT前端培训品牌，
+妙味课堂是一支独具特色的IT培训团队，妙味反对传统IT教育枯燥乏味的教学模式，妙味提供一种全新的快乐学习方法！
+目前主要针对的是javascript培训，同时还提供了css教程、javascript视频、js特效等，最新推出了外地学员们喜欢的javascript网络课程服务，同时还为处于javascript入门阶段的朋友录制了大量java的IT培训团队，妙味反对传统IT教育枯燥乏味的教学模式，妙味提供一种全新的快乐学习方法！
+目前主要针对的是javascript培训，同时还提供了css教程、javascript视频、js特效等，最新推出了外地学员们喜欢的javascript网络课程服务，同时还为处于javascript入门阶段的朋友录制了大量javascript视频，其中涉及了大量javascript基础知识，希望妙味课堂推出的javascript网络培训课程能带给大家更多惊喜。妙味课堂是北京妙味趣学信息技术有限公司旗下的IT前端培训品牌，
+妙味课堂是一支独具特色的IT培训团队，妙味反对传统IT教育枯燥乏味的教学模式，妙味提供一种全新的快乐学习方法！
+目前主要针对的是javascript培训，同时还提供了css教程、javascript视频、js特效等，最新推出了外地学员们喜欢的javascript网络课程服务，同时还为处于javascript入门阶段的朋友录制了大量java的IT培训团队，妙味反对传统IT教育枯燥乏味的教学模式，妙味提供一种全新的快乐学习方法！
+目前主要针对的是javascript培训，同时还提供了css教程、javascript视频、js特效等，最新推出了外地学员们喜欢的javascript网络课程服务，同时还为处于javascript入门阶段的朋友录制了大量javascript视频，其中涉及了大量javascript基础知识，希望妙味课堂推出的javascript网络培训课程能带给大家更多惊喜。妙味课堂是北京妙味趣学信息技术有限公司旗下的IT前端培训品牌，
+妙味课堂是一支独具特色的IT培训团队，妙味反对传统IT教育枯燥乏味的教学模式，妙味提供一种全新的快乐学习方法！
+目前主要针对的是javascript培训，同时还提供了css教程、javascript视频、js特效等，最新推出了外地学员们喜欢的javascript网络课程服务，同时还为处于javascript入门阶段的朋友录制了大量java的IT培训团队，妙味反对传统IT教育枯燥乏味的教学模式，妙味提供一种全新的快乐学习方法！
+目前主要针对的是javascript培训，同时还提供了css教程、javascript视频、js特效等，最新推出了外地学员们喜欢的javascript网络课程服务，同时还为处于javascript入门阶段的朋友录制了大量javascript视频，其中涉及了大量javascript基础知识，希望妙味课堂推出的javascript网络培训课程能带给大家更多惊喜。妙味课堂是北京妙味趣学信息技术有限公司旗下的IT前端培训品牌，
+妙味课堂是一支独具特色的IT培训团队，妙味反对传统IT教育枯燥乏味的教学模式，妙味提供一种全新的快乐学习方法！
+目前主要针对的是javascript培训，同时还提供了css教程、javascript视频、js特效等，最新推出了外地学员们喜欢的javascript网络课程服务，同时还为处于javascript入门阶段的朋友录制了大量java的IT培训团队，妙味反对传统IT教育枯燥乏味的教学模式，妙味提供一种全新的快乐学习方法！
+目前主要针对的是javascript培训，同时还提供了css教程、javascript视频、js特效等，最新推出了外地学员们喜欢的javascript网络课程服务，同时还为处于javascript入门阶段的朋友录制了大量javascript视频，其中涉及了大量javascript基础知识，希望妙味课堂推出的javascript网络培训课程能带给大家更多惊喜。妙味课堂是北京妙味趣学信息技术有限公司旗下的IT前端培训品牌，
+妙味课堂是一支独具特色的IT培训团队，妙味反对传统IT教育枯燥乏味的教学模式，妙味提供一种全新的快乐学习方法！
+目前主要针对的是javascript培训，同时还提供了css教程、javascript视频、js特效等，最新推出了外地学员们喜欢的javascript网络课程服务，同时还为处于javascript入门阶段的朋友录制了大量java的IT培训团队，妙味反对传统IT教育枯燥乏味的教学模式，妙味提供一种全新的快乐学习方法！
+目前主要针对的是javascript培训，同时还提供了css教程、javascript视频、js特效等，最新推出了外地学员们喜欢的javascript网络课程服务，同时还为处于javascript入门阶段的朋友录制了大量javascript视频，其中涉及了大量javascript基础知识，希望妙味课堂推出的javascript网络培训课程能带给大家更多惊喜。妙味课堂是北京妙味趣学信息技术有限公司旗下的IT前端培训品牌，
+妙味课堂是一支独具特色的IT培训团队，妙味反对传统IT教育枯燥乏味的教学模式，妙味提供一种全新的快乐学习方法！
+目前主要针对的是javascript培训，同时还提供了css教程、javascript视频、js特效等，最新推出了外地学员们喜欢的javascript网络课程服务，同时还为处于javascript入门阶段的朋友录制了大量java的IT培训团队，妙味反对传统IT教育枯燥乏味的教学模式，妙味提供一种全新的快乐学习方法！
+目前主要针对的是javascript培训，同时还提供了css教程、javascript视频、js特效等，最新推出了外地学员们喜欢的javascript网络课程服务，同时还为处于javascript入门阶段的朋友录制了大量javascript视频，其中涉及了大量javascript基础知识，希望妙味课堂推出的javascript网络培训课程能带给大家更多惊喜。妙味课堂是北京妙味趣学信息技术有限公司旗下的IT前端培训品牌，
+妙味课堂是一支独具特色的IT培训团队，妙味反对传统IT教育枯燥乏味的教学模式，妙味提供一种全新的快乐学习方法！
+目前主要针对的是javascript培训，同时还提供了css教程、javascript视频、js特效等，最新推出了外地学员们喜欢的javascript网络课程服务，同时还为处于javascript入门阶段的朋友录制了大量java
+		</div>
+		<div id="slideBar">
+			<div id="bar"></div>
+		</div>
+	</div>
+</body>
+</html>
